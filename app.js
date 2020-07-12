@@ -40,6 +40,40 @@ const setVoice = event => {
     utterance.voice = selectedVoice
 }
 
+const addExpressionBoxesIntoDOM = () => {
+    main.innerHTML = humanExpressions.map(({ img,text }) => `
+        <div class="expression-box" data-js="${text}">
+            <img src="${img}" alt="${text}" data-js="${text}">
+            <p class="info" data-js="${text}">${text}</p>
+        </div>
+    `).join('')
+}
+
+addExpressionBoxesIntoDOM()
+
+const setStyeOfClickedDiv = dataValue => {
+    const div = document.querySelector(`[data-js="${dataValue}"]`)
+        div.classList.add('active')
+        setTimeout(() => {
+            div.classList.remove('active')
+        }, 1000)
+}
+
+main.addEventListener('click', event => {
+    const clickedElement = event.target
+
+    const clickedElementTextMustBeSpoken = clickedElement.tagName === 'IMG' 
+        || clickedElement.tagName === 'P'
+
+    if (clickedElementTextMustBeSpoken){
+        setTextMessage(clickedElement.dataset.js)
+        speakText()
+        setStyeOfClickedDiv(clickedElement.dataset.js)
+    }
+})
+
+/*
+
 const createExpressionBox = ({ img,text }) => {
     const div = document.createElement('div')
 
@@ -64,6 +98,8 @@ const createExpressionBox = ({ img,text }) => {
 }
 
 humanExpressions.forEach(createExpressionBox)
+
+*/
 
 let voices = []
 
